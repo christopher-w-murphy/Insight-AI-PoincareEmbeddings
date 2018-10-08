@@ -9,17 +9,6 @@ and remove those that have websites for IDs.
 import pandas as pd
 import numpy as np
 
-df = (pd
-      .read_csv('../data/loc_literature_full.csv'))
-
-# there are 30 IDs that appear more than 30 times
-shelf_ids = ((df['shelf_id']
-              .value_counts() > 30)[:30]
-             .index
-             .drop(['http://ww',
-                    'http://lcc',
-                    'http://catalo']))
-
 def shelf_query(shelfid):
     return 'shelf_id == "' + shelfid + '"'
 
@@ -33,23 +22,36 @@ def query_str():
 
     return querystr
 
-query_string = query_str()
+if __name__ == '__main__':
 
-df_red = (df
-          .query(query_string)
-          .dropna()
-          .reset_index(drop=True))
+    df = (pd
+          .read_csv('../data/loc_literature_full.csv'))
 
-class2name = (pd
-              .read_csv('../data/loc_class2name.csv',
-                        index_col='Class'))
+    # there are 30 IDs that appear more than 30 times
+    shelf_ids = ((df['shelf_id']
+                  .value_counts() > 30)[:30]
+                 .index
+                 .drop(['http://ww',
+                        'http://lcc',
+                        'http://catalo']))
 
-df_red['subclass'] = [class2name['Name'].loc[df_red['shelf_id'][i]]
-                      for i in df_red.index]
+    query_string = query_str()
 
-(df_red
- .to_csv('../data/loc_literature_reduced.csv',
-         columns=['title',
-                  'subclass',
-                  'description'],
-         index=False))
+    df_red = (df
+              .query(query_string)
+              .dropna()
+              .reset_index(drop=True))
+
+    class2name = (pd
+                  .read_csv('../data/loc_class2name.csv',
+                            index_col='Class'))
+
+    df_red['subclass'] = [class2name['Name'].loc[df_red['shelf_id'][i]]
+                          for i in df_red.index]
+
+    (df_red
+     .to_csv('../data/loc_literature_reduced.csv',
+             columns=['title',
+                      'subclass',
+                      'description'],
+             index=False))
