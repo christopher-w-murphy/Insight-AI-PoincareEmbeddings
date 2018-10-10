@@ -19,7 +19,7 @@ cd $repo_name
 - The GEM_PATH in ```configs/production.py``` needs to be changed to the directory on your machine where GEM was installed
 
 ## Test
-- Running ```python tests/analyis_test.py``` should produce 6 .pdf figures, (1 .tsv file,) and print 3 sets of book recommendations
+- Running ```python tests/analysis_test.py``` should produce 6 .pdf figures, (1 .tsv file,) and print 3 sets of book recommendations
 
 ## Analysis
 - See the STATIC folder for examples of Poincar&eacute; and Graph Factorization embeddings 
