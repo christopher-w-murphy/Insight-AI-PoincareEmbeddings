@@ -2,10 +2,11 @@ import pandas as pd
 import numpy as np
 from matplotlib import cm
 
-import ingestion_test
-import ../src/ingestion as ingestion
-import ../src/utils as utils
-import ../src/model as model
+from . import ingestion_test
+from ..src import ingestion
+from ..src import utils
+from ..src import model
+from ..config import tests
 
 def recommender(title, genre_embed, genPdes_embed, des_df, n_recs=5):
     """
@@ -35,7 +36,7 @@ def recommender(title, genre_embed, genPdes_embed, des_df, n_recs=5):
 if __name__ == '__main__':
     # load data
     df = (pd
-          .read_csv('../data/books_descriptions_small.csv'))
+          .read_csv(tests.LITERATURE_FILE))
     literature_only = (df['Dewey Decimal']>=800)
 
     # process data (while loading more data)
@@ -44,32 +45,33 @@ if __name__ == '__main__':
 
     ## genre-only
     edgelist1 = (ingestion
-                 .create_edgelist('../data/books_edgelist_small.csv',
+                 .create_edgelist(tests.CLASS_FILE,
                                   df[literature_only]))
     ## genre + descriptions
+    threshold = (recs_trad['score'] > tests.THRESHOLD)
     edgelist = (ingestion
                 .combine_edgelists(edgelist1,
-                                   recs_trad(recs_trad['score'] > 0.07)))
+                                   recs_trad[threshold]))
 
     sc_ind = (ingestion
               .get_subclass_counts(df[literature_only]))
-    ncls = 30
+    ncls = tests.N_CLS
 
     # prepare to analyze
     ## genre-only
     (utils
      .edgelist2tsv(edgelist1[['NEdge_From', 'NEdge_To']]
                    .values,
-                   '../data/books_edgelist1_small.tsv'))
+                   tests.GENRE_TSV_FNAME))
     G1 = (utils
-          .tsv2edgelist('../data/books_edgelist1_small.tsv'))
+          .tsv2edgelist(tests.GENRE_TSV_FNAME))
     ## genre + description
     (utils
      .edgelist2tsv(edgelist[['NEdge_From', 'NEdge_To']]
                    .values,
-                   '../data/books_edgelist_small.tsv'))
+                   tests.GENPDES_TSV_FNAME))
     G = (utils
-         .tsv2edgelist('../data/books_edgelist_small.tsv'))
+         .tsv2edgelist(tests.GENPDES_TSV_FNAME))
 
     colors = (cm
               .rainbow(np
