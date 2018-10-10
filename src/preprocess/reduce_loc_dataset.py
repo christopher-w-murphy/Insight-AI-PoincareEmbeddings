@@ -52,7 +52,7 @@ if __name__ == '__main__':
                           for i in df_red.index]
 
     (df_red
-     .to_csv(production.LITERATURE_FILE,
+     .to_csv(production.REDUCED_DATASET,
              columns=['title',
                       'subclass',
                       'description'],
