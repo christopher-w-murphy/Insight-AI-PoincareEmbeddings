@@ -4,12 +4,11 @@ from envparse import env
 GEM_PATH = (env
             .str('GEM_PATH', default='/Users/christopherwmurphy/GEM'))
 
-# settings for analysis and preprocessing
+# settings for analysis
 LITERATURE_FILE = (env
                    .str('LITERATURE_FILE',
                         default='../data/loc_literature_reduced.csv'))
 
-# settings for analysis
 CLASS_FILE = (env
               .str('CLASS_FILE',
                    default='../data/loc_class_edgelist.csv'))
@@ -27,15 +26,16 @@ GENRE_TSV_FNAME = (env
                    .str('GENRE_TSV_FNAME', default='../data/Nedgelist.tsv'))
 
 GENPDES_TSV_FNAME = (env
-                     .str('GENpDES_TSV_FNAME',
+                     .str('GENPDES_TSV_FNAME',
                           default='../data/Nedgelist2.tsv'))
 
 # settings for preprocessing
 FULL_DATASET = (env
-                .str('FULL_DATASET', default='../data/loc_literature_full.csv'))
+                .str('FULL_DATASET', default='../../data/loc_literature_full.csv'))
 CLASS_NAMES = (env
-               .str('CLASS_NAMES', default='../data/loc_class2name.csv'))
-'../data/loc_literature_reduced.csv'
+               .str('CLASS_NAMES', default='../../data/loc_class2name.csv'))
+REDUCED_DATASET = (env
+                   .str('REDUCED_DATASET', default='../data/loc_literature_reduced.csv'))
 ## the settings below are only need to be changed if you download (and hand clean!) the LoC jsons
 SP_MIN = (env
           .int('SP_MIN', default=1))
