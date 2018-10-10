@@ -9,6 +9,8 @@ and remove those that have websites for IDs.
 import pandas as pd
 import numpy as np
 
+from ...configs import production
+
 def shelf_query(shelfid):
     return 'shelf_id == "' + shelfid + '"'
 
@@ -25,7 +27,7 @@ def query_str():
 if __name__ == '__main__':
 
     df = (pd
-          .read_csv('../data/loc_literature_full.csv'))
+          .read_csv(production.FULL_DATASET))
 
     # there are 30 IDs that appear more than 30 times
     shelf_ids = ((df['shelf_id']
@@ -43,14 +45,14 @@ if __name__ == '__main__':
               .reset_index(drop=True))
 
     class2name = (pd
-                  .read_csv('../data/loc_class2name.csv',
+                  .read_csv(production.CLASS_NAMES,
                             index_col='Class'))
 
     df_red['subclass'] = [class2name['Name'].loc[df_red['shelf_id'][i]]
                           for i in df_red.index]
 
     (df_red
-     .to_csv('../data/loc_literature_reduced.csv',
+     .to_csv(production.LITERATURE_FILE,
              columns=['title',
                       'subclass',
                       'description'],

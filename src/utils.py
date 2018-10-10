@@ -1,7 +1,7 @@
 import csv
-GEM_PATH = '/Users/christopherwmurphy/GEM'
-import sys
-sys.path.append(GEM_PATH)
+from ..configs.production import GEM_PATH
+from sys import path
+path.append(GEM_PATH)
 from gem.utils import graph_util
 import numpy as np
 import matplotlib.pyplot as plt

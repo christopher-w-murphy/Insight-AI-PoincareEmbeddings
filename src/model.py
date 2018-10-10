@@ -1,8 +1,8 @@
 from gensim.models.poincare import PoincareModel
 from gensim.models.poincare import ReconstructionEvaluation
-GEM_PATH = '/Users/christopherwmurphy/GEM'
-import sys
-sys.path.append(GEM_PATH)
+from ..configs.production import GEM_PATH
+from sys import path
+path.append(GEM_PATH)
 from gem.embedding.gf import GraphFactorization
 from gem.evaluation import evaluate_graph_reconstruction as gr
 

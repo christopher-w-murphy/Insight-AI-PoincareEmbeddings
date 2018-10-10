@@ -2,44 +2,45 @@ import pandas as pd
 import numpy as np
 from matplotlib import cm
 
-import utils
-import ingestion
-import model
+from ..configs import production
+from . import ingestion
+from . import model
+from . import utils
 
 if __name__ == '__main__':
     # load data
     df = (pd
-          .read_csv('../data/loc_literature_reduced.csv')
+          .read_csv(production.LITERATURE_FILE)
           .drop_duplicates(subset='title')
           .reset_index(drop=True))
 
     # process data (while loading more data)
     book_sim = (ingestion
-                .df_recs_tfidf(df, 0.80, 0.99))
+                .df_recs_tfidf(df, production.MIN_CUT, production.MAX_CUT))
 
     ## genre-only
     edgelist = (ingestion
-                .create_edgelist('../data/loc_class_edgelist.csv', df))
+                .create_edgelist(production.CLASS_FILE, df))
     ## genre + description
-    edgelist2 = combine_edgelists(edgelist,
-                                  book_sim)
+    edgelist2 = (ingestion
+                 .combine_edgelists(edgelist, book_sim))
 
     sc_ind = (ingestion
               .get_subclass_counts(df))
-    ncls = 28
+    ncls = production.N_CLS
 
     # prepare to analyze
     (utils
      .edgelist2tsv(edgelist[['NEdge_From', 'NEdge_To']].values,
-                   '../data/Nedgelist.tsv'))
+                   production.GENRE_TSV_FNAME))
      G = (utils
-          .tsv2edgelist('../data/Nedgelist.tsv'))
+          .tsv2edgelist(production.GENRE_TSV_FNAME))
 
     (utils
      .edgelist2tsv(edgelist2[['NEdge_From', 'NEdge_To']].values,
-                   '../data/Nedgelist2.tsv'))
+                   production.GENPDES_TSV_FNAME))
      G2 = (utils
-           .tsv2edgelist('../data/Nedgelist2.tsv'))
+           .tsv2edgelist(production.GENPDES_TSV_FNAME))
 
     colors = (cm
               .rainbow(np
