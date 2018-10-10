@@ -9,6 +9,8 @@ Load and clean the Library of Congress 'literature' dataset.
 
 import pandas as pd
 
+from ...configs import production
+
 def read_loc_json(file):
     df = (pd
           .read_json(file,
@@ -20,11 +22,11 @@ def read_loc_json(file):
 def read_loc_jsons():
 
     # read the 1st json file
-    df = read_loc_json(LOC_JSON_PATH + 'loc' + str(spmin) + '.json')
+    df = read_loc_json(production.LOC_JSON_PATH + 'loc' + str(spmin) + '.json')
 
     # read the rest of the json files
-    for i in range(spmin+1, spmax+1):
-        fn = LOC_JSON_PATH + 'loc' + str(i) + '.json'
+    for i in range(production.SP_MIN+1, production.SP_MAX+1):
+        fn = production.LOC_JSON_PATH + 'loc' + str(i) + '.json'
         dfi = read_loc_json(fn)
         df = (df
               .append(dfi,
@@ -45,12 +47,8 @@ def read_loc_jsons():
 
 if __name__ == '__main__':
 
-    spmin = 1
-    spmax = 79
-    LOC_JSON_PATH = '../../data/'
-
     df = read_loc_jsons()
 
     (df
-     .to_csv('../data/loc_literature_full.csv',
+     .to_csv(production.FULL_DATASET,
              index=False))
