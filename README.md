@@ -12,15 +12,8 @@ cd $repo_name
 
 ## Requisites
 - Python 3
-- GEM
-```
-git clone https://github.com/palash1992/GEM
-```
-- Gensim
--- assuming you are using the Anaconda Python 3 environment, do
-```
-conda install -c anaconda gensim
-```
+- GEM: ```git clone https://github.com/palash1992/GEM```
+- Gensim: ```conda install -c anaconda gensim```
 
 ## Configs
 - The GEM_PATH in ```configs/production.py``` needs to be changed to the directory on your machine where GEM was installed
