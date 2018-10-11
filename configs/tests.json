@@ -1,0 +1,10 @@
+{
+  "ANALYSIS": {
+    "LITERATURE_FILE": "../data/books_descriptions_small.csv",
+    "CLASS_FILE": "../data/books_edgelist_small.csv",
+    "THRESHOLD": 0.07,
+    "N_CLS": 30,
+    "GENRE_TSV_FNAME": "../data/books_edgelist1_small.tsv",
+    "GENPDES_TSV_FNAME": "../data/books_edgelist_small.tsv"
+  }
+}

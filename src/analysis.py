@@ -1,46 +1,58 @@
-import pandas as pd
-import numpy as np
-from matplotlib import cm
-
-from ..configs import production
-from . import ingestion
-from . import model
-from . import utils
-
 if __name__ == '__main__':
+    import pandas as pd
+    import numpy as np
+    from matplotlib import cm
+    import json
+
+    import ingestion
+    import model
+    import utils
+
+    # configure
+    with open('../configs/production.json', 'r') as f:
+        config = json.load(f)
+
+    literature_file = config['ANALYSIS']['LITERATURE_FILE']
+    class_file = config['ANALYSIS']['CLASS_FILE']
+    min_cut = config['ANALYSIS']['MIN_CUT']
+    max_cut = config['ANALYSIS']['MAX_CUT']
+    n_cls = config['ANALYSIS']['N_CLS']
+    genre_tsv_fname = config['ANALYSIS']['GENRE_TSV_FNAME']
+    genpdes_tsv_fname = config['ANALYSIS']['GENPDES_TSV_FNAME']
+
+
     # load data
     df = (pd
-          .read_csv(production.LITERATURE_FILE)
+          .read_csv(literature_file)
           .drop_duplicates(subset='title')
           .reset_index(drop=True))
 
     # process data (while loading more data)
     book_sim = (ingestion
-                .df_recs_tfidf(df, production.MIN_CUT, production.MAX_CUT))
+                .df_recs_tfidf(df, min_cut, max_cut))
 
     ## genre-only
     edgelist = (ingestion
-                .create_edgelist(production.CLASS_FILE, df))
+                .create_edgelist(class_file, df))
     ## genre + description
     edgelist2 = (ingestion
                  .combine_edgelists(edgelist, book_sim))
 
     sc_ind = (ingestion
               .get_subclass_counts(df))
-    ncls = production.N_CLS
 
     # prepare to analyze
     (utils
      .edgelist2tsv(edgelist[['NEdge_From', 'NEdge_To']].values,
-                   production.GENRE_TSV_FNAME))
-     G = (utils
-          .tsv2edgelist(production.GENRE_TSV_FNAME))
+                   genre_tsv_fname))
+    G = (utils
+         .tsv2edgelist(genre_tsv_fname))
 
     (utils
      .edgelist2tsv(edgelist2[['NEdge_From', 'NEdge_To']].values,
-                   production.GENPDES_TSV_FNAME))
-     G2 = (utils
-           .tsv2edgelist(production.GENPDES_TSV_FNAME))
+                   genpdes_tsv_fname))
+    G2 = (utils
+          .tsv2edgelist(genpdes_tsv_fname))
 
     colors = (cm
               .rainbow(np
@@ -53,7 +65,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding1.kv.vectors,
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Poincare Embedding $d=2$ Genre-Only',
                    'poincare_genre.pdf'))
@@ -63,7 +75,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding2.get_embedding(),
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Graph Factorization $d=2$ Genre-Only',
                    'GF_genre.pdf'))
@@ -74,7 +86,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding3.kv.vectors,
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Poincare Embedding $d=2$',
                    'poincare_d2.pdf'))
@@ -86,7 +98,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding4.kv.vectors,
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Poincare Embedding $d=10$',
                    'poincare_d10.pdf'))
@@ -96,7 +108,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding5.get_embedding(),
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Graph Factorization $d=2$',
                    'GF_d2.pdf'))
@@ -107,7 +119,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding6.get_embedding(),
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Graph Factorization $d=10$',
                    'GF_d10.pdf'))
