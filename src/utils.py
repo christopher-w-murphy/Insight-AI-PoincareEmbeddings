@@ -2,7 +2,7 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
-from json
+import json
 from sys import path
 
 # configure
