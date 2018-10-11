@@ -1,4 +1,4 @@
-from json
+import json
 from sys import path
 from gensim.models.poincare import PoincareModel
 from gensim.models.poincare import ReconstructionEvaluation
