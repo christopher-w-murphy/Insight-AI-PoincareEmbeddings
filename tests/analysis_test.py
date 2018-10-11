@@ -1,12 +1,17 @@
 import pandas as pd
 import numpy as np
-from matplotlib import cm
 
-from . import ingestion_test
-from ..src import ingestion
-from ..src import utils
-from ..src import model
-from ..config import tests
+import sys
+import os
+#sys.path.append('../')
+sys.path.append('./')
+sys.path.append(os.path.realpath(__file__))
+sys.path.append(os.path.realpath('../'))
+
+import ingestion_test
+from src import ingestion
+from src import utils
+from src import model
 
 def recommender(title, genre_embed, genPdes_embed, des_df, n_recs=5):
     """
@@ -34,9 +39,23 @@ def recommender(title, genre_embed, genPdes_embed, des_df, n_recs=5):
             .DataFrame(data, index=range(1,1+n_recs)))
 
 if __name__ == '__main__':
+    from matplotlib import cm
+    import json
+
+    # configure
+    with open('../configs/tests.json', 'r') as f:
+        config = json.load(f)
+
+    literature_file = config['ANALYSIS']['LITERATURE_FILE']
+    class_file = config['ANALYSIS']['CLASS_FILE']
+    threshold = config['ANALYSIS']['THRESHOLD']
+    n_cls = config['ANALYSIS']['N_CLS']
+    genre_tsv_fname = config['ANALYSIS']['GENRE_TSV_FNAME']
+    genpdes_tsv_fname = config['ANALYSIS']['GENPDES_TSV_FNAME']
+
     # load data
     df = (pd
-          .read_csv(tests.LITERATURE_FILE))
+          .read_csv(literature_file))
     literature_only = (df['Dewey Decimal']>=800)
 
     # process data (while loading more data)
@@ -45,33 +64,32 @@ if __name__ == '__main__':
 
     ## genre-only
     edgelist1 = (ingestion
-                 .create_edgelist(tests.CLASS_FILE,
+                 .create_edgelist(class_file,
                                   df[literature_only]))
     ## genre + descriptions
-    threshold = (recs_trad['score'] > tests.THRESHOLD)
+    thres_crit = (recs_trad['score'] > threshold)
     edgelist = (ingestion
                 .combine_edgelists(edgelist1,
-                                   recs_trad[threshold]))
+                                   recs_trad[thres_crit]))
 
     sc_ind = (ingestion
               .get_subclass_counts(df[literature_only]))
-    ncls = tests.N_CLS
 
     # prepare to analyze
     ## genre-only
     (utils
      .edgelist2tsv(edgelist1[['NEdge_From', 'NEdge_To']]
                    .values,
-                   tests.GENRE_TSV_FNAME))
+                   genre_tsv_fname))
     G1 = (utils
-          .tsv2edgelist(tests.GENRE_TSV_FNAME))
+          .tsv2edgelist(genre_tsv_fname))
     ## genre + description
     (utils
      .edgelist2tsv(edgelist[['NEdge_From', 'NEdge_To']]
                    .values,
-                   tests.GENPDES_TSV_FNAME))
+                   genpdes_tsv_fname))
     G = (utils
-         .tsv2edgelist(tests.GENPDES_TSV_FNAME))
+         .tsv2edgelist(genpdes_tsv_fname))
 
     colors = (cm
               .rainbow(np
@@ -85,7 +103,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding1.kv.vectors,
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Poincare Embedding $d=2$ Genre-Only',
                    'poincare_genre_te.pdf'))
@@ -95,7 +113,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding2.get_embedding(),
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Graph Factorization $d=2$ Genre-Only',
                    'GF_genre_te.pdf'))
@@ -106,7 +124,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding3.kv.vectors,
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Poincare Embedding $d=2$',
                    'poincare_d2_te.pdf'))
@@ -118,7 +136,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding4.kv.vectors,
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Poincare Embedding $d=10$',
                    'poincare_d10_te.pdf'))
@@ -128,7 +146,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding5.get_embedding(),
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Graph Factorization $d=2$',
                    'GF_d2_te.pdf'))
@@ -139,7 +157,7 @@ if __name__ == '__main__':
     (utils
      .poincare_viz(embedding6.get_embedding(),
                    sc_ind,
-                   ncls,
+                   n_cls,
                    colors,
                    'Graph Factorization $d=10$',
                    'GF_d10_te.pdf'))

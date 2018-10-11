@@ -1,8 +1,13 @@
+from json
+from sys import path
 from gensim.models.poincare import PoincareModel
 from gensim.models.poincare import ReconstructionEvaluation
-from ..configs.production import GEM_PATH
-from sys import path
-path.append(GEM_PATH)
+
+# configure
+with open('../configs/production.json', 'r') as f:
+    config = json.load(f)
+gem_path = config['UTILS']['GEM_PATH']
+path.append(gem_path)
 from gem.embedding.gf import GraphFactorization
 from gem.evaluation import evaluate_graph_reconstruction as gr
 

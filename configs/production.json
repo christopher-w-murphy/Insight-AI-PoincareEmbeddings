@@ -1,0 +1,22 @@
+{
+  "UTILS": {
+    "GEM_PATH": "/Users/christopherwmurphy/GEM"
+  },
+  "ANALYSIS": {
+    "LITERATURE_FILE": "../data/loc_literature_reduced.csv",
+    "CLASS_FILE": "../data/loc_class_edgelist.csv",
+    "MIN_CUT": 0.80,
+    "MAX_CUT": 0.99,
+    "N_CLS": 28,
+    "GENRE_TSV_FNAME": "../data/Nedgelist.tsv",
+    "GENPDES_TSV_FNAME": "../data/Nedgelist2.tsv"
+  },
+  "PREPROCESSING": {
+    "FULL_DATASET": "../../data/loc_literature_full.csv",
+    "CLASS_NAMES": "../../data/loc_class2name.csv",
+    "REDUCED_DATASET": "../data/loc_literature_reduced.csv",
+    "SP_MIN": 1,
+    "SP_MAX": 79,
+    "LOC_JSON_PATH": "../../data/"
+  }
+}
