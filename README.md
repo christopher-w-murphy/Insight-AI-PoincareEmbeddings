@@ -16,7 +16,7 @@ cd $repo_name
 - Gensim: ```conda install -c anaconda gensim```
 
 ## Configs
-The GEM_PATH in ```configs/production.py``` needs to be changed to the directory on your machine where GEM was installed
+...
 
 ## Test
 Running ```python tests/analysis_test.py``` should produce 6 .pdf figures, (1 .tsv file,) and print 3 sets of book recommendations
