@@ -1,7 +1,4 @@
 {
-  "UTILS": {
-    "GEM_PATH": "/Users/christopherwmurphy/GEM"
-  },
   "ANALYSIS": {
     "LITERATURE_FILE": "../data/loc_literature_reduced.csv",
     "CLASS_FILE": "../data/loc_class_edgelist.csv",
