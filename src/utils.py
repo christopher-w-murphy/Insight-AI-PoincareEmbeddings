@@ -2,14 +2,6 @@ import csv
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
-import json
-from sys import path
-
-# configure
-with open('../configs/production.json', 'r') as f:
-    config = json.load(f)
-gem_path = config['UTILS']['GEM_PATH']
-path.append(gem_path)
 from gem.utils import graph_util
 
 def edgelist2tsv(edgelist, filename):
