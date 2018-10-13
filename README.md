@@ -12,7 +12,7 @@ cd $repo_name
 
 ## Requisites
 - Python 3
-- GEM: ```git clone https://github.com/palash1992/GEM```
+- GEM: ```pip install git+https://github.com/palash1992/GEM```
 - Gensim: ```conda install -c anaconda gensim```
 
 ## Configs
