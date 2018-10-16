@@ -1,17 +1,10 @@
 import pandas as pd
 import numpy as np
 
-import sys
-import os
-#sys.path.append('../')
-sys.path.append('./')
-sys.path.append(os.path.realpath(__file__))
-sys.path.append(os.path.realpath('../'))
-
 import ingestion_test
-from src import ingestion
-from src import utils
-from src import model
+from ..src import ingestion
+from ..src import model
+from ..src import utils
 
 def recommender(title, genre_embed, genPdes_embed, des_df, n_recs=5):
     """
