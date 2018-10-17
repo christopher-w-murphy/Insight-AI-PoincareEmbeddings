@@ -34,7 +34,7 @@ def poincare_viz(vectors, sc_ind, ncls, colors, title, filename):
     ncls: the number of genres + subgenres
     colors: list of colors associated with the subgenres
     """
-    fig = plt.figure(fignum)
+    fig = plt.figure()
 
     if len(vectors.T) > 2:
         model = TSNE(n_components=2)

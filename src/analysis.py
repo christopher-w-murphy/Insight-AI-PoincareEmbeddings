@@ -94,7 +94,7 @@ if __name__ == '__main__':
     embedding4 = (model
                   .train_poincare_model(edgelist2[['Edge_From', 'Edge_To']]
                                         .values,
-                                        d=10))
+                                        dim=10))
     (utils
      .poincare_viz(embedding4.kv.vectors,
                    sc_ind,
@@ -115,7 +115,7 @@ if __name__ == '__main__':
 
     embedding6, Y6 = (model
                       .train_GF_model(G2,
-                      d=10))
+                      dim=10))
     (utils
      .poincare_viz(embedding6.get_embedding(),
                    sc_ind,

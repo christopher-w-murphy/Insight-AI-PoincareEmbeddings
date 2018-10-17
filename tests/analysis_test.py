@@ -2,9 +2,13 @@ import pandas as pd
 import numpy as np
 
 import ingestion_test
-from ..src import ingestion
-from ..src import model
-from ..src import utils
+
+import sys
+sys.path.append('../')
+
+from src import ingestion
+from src import model
+from src import utils
 
 def recommender(title, genre_embed, genPdes_embed, des_df, n_recs=5):
     """
@@ -49,7 +53,7 @@ if __name__ == '__main__':
     # load data
     df = (pd
           .read_csv(literature_file))
-    literature_only = (df['Dewey Decimal']>=800)
+    literature_only = (df['subclass']>=800)
 
     # process data (while loading more data)
     recs_trad = (ingestion_test
@@ -125,7 +129,7 @@ if __name__ == '__main__':
     embedding4 = (model
                   .train_poincare_model(edgelist[['Edge_From', 'Edge_To']]
                                         .values,
-                                        d=10))
+                                        dim=10))
     (utils
      .poincare_viz(embedding4.kv.vectors,
                    sc_ind,
@@ -146,7 +150,7 @@ if __name__ == '__main__':
 
     embedding6, Y6 = (model
                       .train_GF_model(G,
-                      d=10))
+                      dim=10))
     (utils
      .poincare_viz(embedding6.get_embedding(),
                    sc_ind,
@@ -162,7 +166,7 @@ if __name__ == '__main__':
     for title in titles:
         print('Here are recommendations based on %s:' %title)
         recsdf = recommender(title,
-                             embedding1.kv.vectors,
-                             embedding3.kv.vectors,
+                             embedding1.kv,
+                             embedding3.kv,
                              recs_trad)
         print(recsdf)

@@ -13,11 +13,11 @@ def df_recs_tfidf(df):
     Tfidf_vec = TfidfVectorizer(stop_words = 'english')
 
     X = (Tfidf_vec
-         .fit_transform(df['Amazon Description'])
+         .fit_transform(df['description'])
          .todense())
 
-    simil = [(df['Title'].iloc[i],
-              df['Title'].iloc[j],
+    simil = [(df['title'].iloc[i],
+              df['title'].iloc[j],
               np.sum(X[i] * X[j].T))
              for i in range(len(X)) for j in range(len(X))]
     simil.sort(key=lambda x: x[2],
@@ -25,8 +25,8 @@ def df_recs_tfidf(df):
 
     df_out = (pd
               .DataFrame(simil[len(X):], # indexing w/ len(X): eliminates recommending the input book
-                         columns=['input',
-                                  'recommendations',
+                         columns=['book i',
+                                  'book j',
                                   'score']))
 
     return df_out

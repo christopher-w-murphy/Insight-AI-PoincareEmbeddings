@@ -11,6 +11,9 @@ import pandas as pd
 import json
 
 # configure
+with open('../../configs/production.json', 'r') as f:
+    config = json.load(f)
+
 full_dataset = config['PREPROCESSING']['FULL_DATASET']
 sp_min = config['PREPROCESSING']['SP_MIN']
 sp_max = config['PREPROCESSING']['SP_MAX']
@@ -27,7 +30,7 @@ def read_loc_json(file):
 def read_loc_jsons():
 
     # read the 1st json file
-    df = read_loc_json(loc_json_path + 'loc' + str(spmin) + '.json')
+    df = read_loc_json(loc_json_path + 'loc' + str(sp_min) + '.json')
 
     # read the rest of the json files
     for i in range(sp_min+1, sp_min+1):
