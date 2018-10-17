@@ -27,7 +27,7 @@ def df_recs_tfidf(df, cutmin=0.0, cutmax=1.0):
                                'Nj',
                                'score']))
 
-    threshold = (df2['score'] >= cutmin) & (df2['score'] =< cutmax)
+    threshold = (df2['score'] >= cutmin) & (df2['score'] <= cutmax)
 
     df3 = (df2[threshold]
            .reset_index(drop=True))
