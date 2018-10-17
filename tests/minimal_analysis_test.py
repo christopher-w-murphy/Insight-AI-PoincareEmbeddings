@@ -1,44 +1,20 @@
-import pandas as pd
-import numpy as np
-from time import time
-
-import ingestion_test
-
-import sys
-sys.path.append('../')
-
-from src import ingestion
-from src import model
-from src import utils
-
-def recommender(title, genre_embed, genPdes_embed, des_df, n_recs=5):
-    """
-    returns a DataFrame w/ n_recs suggestions based on genre and/or descriptions
-    title: the title of book the reader liked
-    genre_embed: the vectors from the genre-only analysis
-    genPdes_embed: the vectors from the genre + description analysis
-    des_df: the DataFrame with the description-only analysis
-    """
-    df = (des_df[(des_df['book i'] == title)]
-          .sort_values(by='score'))[-n_recs:][::-1]
-
-    data = {'genre only':(np
-                          .array(genre_embed
-                                 .most_similar(title, n_recs))
-                          .T[0]),
-            'genre and description':(np
-                                     .array(genPdes_embed
-                                            .most_similar(title, n_recs))
-                                     .T[0]),
-            'description only':(df[df['book i'] == title]['book j']
-                                .values)}
-
-    return (pd
-            .DataFrame(data, index=range(1,1+n_recs)))
-
 if __name__ == '__main__':
-    from matplotlib import cm
+    import pandas as pd
+    import numpy as np
     import json
+    from time import time
+    from matplotlib import cm
+    from subprocess import call
+
+    import analysis_test
+    import ingestion_test
+
+    import sys
+    sys.path.append('../')
+
+    from src import ingestion
+    from src import model
+    from src import utils
 
     # configure
     with open('../configs/tests.json', 'r') as f:
@@ -49,7 +25,10 @@ if __name__ == '__main__':
     threshold = config['ANALYSIS']['THRESHOLD']
     n_cls = config['ANALYSIS']['N_CLS']
 
+    # time how long the test takes
     t1 = time()
+    print('Running Minimal Analysis Test...')
+
     # load data
     df = (pd
           .read_csv(literature_file))
@@ -73,7 +52,6 @@ if __name__ == '__main__':
               .get_subclass_counts(df[literature_only]))
 
     # prepare to analyze
-
     colors = (cm
               .rainbow(np
                        .linspace(0, 1, len(sc_ind)-1)))
@@ -89,7 +67,8 @@ if __name__ == '__main__':
                    n_cls,
                    colors,
                    'Poincare Embedding $d=2$ Genre-Only',
-                   'poincare_genre_te.pdf'))
+                   'poincare_genre_mintest.png'))
+    call(['open', 'poincare_genre_mintest.png'])
 
     embedding2 = (model
                   .train_poincare_model(edgelist[['Edge_From', 'Edge_To']]
@@ -100,18 +79,18 @@ if __name__ == '__main__':
                    n_cls,
                    colors,
                    'Poincare Embedding $d=2$',
-                   'poincare_d2_te.pdf'))
+                   'poincare_d2_mintest.png'))
+    call(['open', 'poincare_d2_mintest.png'])
 
     ## print recommendations
-    titles = ['Nineteen Eighty-Four',
-              'Clash of Kings, A',
-              'Pride and Prejudice and Zombies']
-    for title in titles:
-        print('Here are recommendations based on %s:' %title)
-        recsdf = recommender(title,
-                             embedding1.kv,
-                             embedding2.kv,
-                             recs_trad)
-        print(recsdf)
+    title = 'Nineteen Eighty-Four'
+    print('If you liked the book %s, here are some recommendations based on:' %title)
+    recsdf = (analysis_test
+              .recommender(title,
+                           embedding1.kv,
+                           embedding2.kv,
+                           recs_trad,
+                           n_recs=10))
+    print(recsdf)
 
-    print('Minimal Analysis Test ran in %.1f sec.' %(time() - t1))
+    print('Minimal Analysis Test ran in %.1f seconds' %(time() - t1))
