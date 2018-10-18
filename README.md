@@ -26,7 +26,7 @@ This will produce two figures of Poincar&eacute; embeddings, one based only on t
 ## Analysis
 The main piece of analysis of this project was to demonstrate that Poincar&eacute embeddings do a better job of separating books of a given (sub)subgenre in the embedding space than traditional embedding methods. This can be seen, for example, by inspecting the figures below. Content-based book recommendations could then be made by finding the 5 (or 10, etc.) nearest neighbors to the book of interest in the embedding space, as measured using the metric of that space.
 
-The data is the same in the two figures below. Each colored point corresponds to a book of a given subsubgenre with each subsubgenre having a unique color. The black points are the locations of genres themselves within the embedding space. The upper panel used the Poincar&eacute embedding algorithm, whereas the lower panel used a embedding method known as Graph Factorization. See the STATIC folder for more examples of Poincar&eacute; and Graph Factorization embeddings 
+The data is the same in the two figures below. Each colored point corresponds to a book of a given subsubgenre with each subsubgenre having a unique color. The black points are the locations of genres themselves within the embedding space. The upper panel used the Poincar&eacute; embedding algorithm, whereas the lower panel used a embedding method known as Graph Factorization. See the STATIC folder for more examples of Poincar&eacute; and Graph Factorization embeddings 
 
 ![Poincar&eacute Embedding *d*=2](https://github.com/christopher-w-murphy/Insight-AI-PoincareEmbeddings/blob/master/STATIC/Poincare_d2.png)
 
